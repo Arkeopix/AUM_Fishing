@@ -1,3 +1,9 @@
 if you're a "chien de la casse" or a "gros daleux" and you know how to use a CLI, then this is for you.
 This is no magick software that will get you all the pussy, but rather a tool allowing you to increase your chances.
 As every social engineering stuff, you will need to be smart !
+
+
+TODO: 
+- Develop facebook login
+- Command line option to specify connection type (facebook login);
+- Command line option for verbose mode

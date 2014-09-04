@@ -1,7 +1,6 @@
 #! /usr/bin/perl -w
 
 use strict;
-use threads;
 use WWW::Mechanize;
 
 $ENV{ PERL_LWP_SSL_VERIFY_HOSTNAME } = 0;
@@ -13,7 +12,6 @@ my $usrn = 'mendiej@openmailbox.org';
 my $bait = 0;
 
 $mech->get( $url );
-$url = $mech->uri;
 print "$url\n";
 $mech->field( 'username', $usrn );
 $mech->field( 'password', $pswd );
@@ -27,17 +25,14 @@ if ( $url eq 'https://www.adopteunmec.com/index?e=login' ) {
 }
 
 $mech->get( $url );
-
 my $res = $mech->content();
-
-#print "$res\n";
 
 my @link_match;
 if ( @link_match = $res =~ /https?:\/\/www\.adopteunmec\.com\/profile\/[0-9]+/g ) {
   foreach my $link ( @link_match ) {
     print "$link\n";
 
-    if ( $mech->follow_link( url => $link ) ) {
+    if ( $mech->get( $link ) ) {
       $bait++;
     }
   }

@@ -20,6 +20,7 @@ sub connect {
 	$mech->field( 'password', $cfg{ auth }{ passwd } );
 	$mech->click_button( value => 'OK' );
 	$url = $mech->uri;
+	$mech->get( $url );
 	
 	if ( $url eq 'https://www.adopteunmec.com/index?e=login' ) {
 		print STDERR "connection failed, wrong username or password";
@@ -32,7 +33,6 @@ sub connect {
 
 sub get_link_home_page {
 	print "Fetching home page\n";
-	$mech->get( $url );
 	my $res = $mech->content;
 	print "Fetched\nchecking for valid profile URL...\n";
 	my @link_match_home = $res =~ /https?:\/\/www\.adopteunmec\.com\/profile\/[0-9]+/g;
@@ -52,7 +52,7 @@ sub get_link_gogole {
 	return @link_match_gogole;
 }
 
-if ( &connect( $mech ) ) {
+if ( &connect ) {
 	my @links = ( get_link_home_page( $mech ), get_link_gogole( $mech ) );
 	foreach my $link ( @links ) {
 		print "found: $link\n";

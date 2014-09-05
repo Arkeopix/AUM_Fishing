@@ -8,14 +8,12 @@ use AUM::Config;
 $ENV{ PERL_LWP_SSL_VERIFY_HOSTNAME } = 0;
 
 my %cfg = AUM::Config->get_cfg;
-my $mech = WWW::Mechanize->new;
-$mech->agent_alias( 'Windows Mozilla' );
+my $mech = WWW::Mechanize->new( agent => 'Windows Mozilla' );
+#$mech->agent_alias( 'Windows Mozilla' );
 my $url = 'https://www.adopteunmec.com';
 my $bait = 0;
 
 sub connect {
-	my ( $mech ) = @_;
-
 	print "Connecting to your profile...\n";
 	$mech->get( $url );
 	$mech->field( 'username', $cfg{ auth }{ user_name } );
@@ -33,8 +31,6 @@ sub connect {
 }
 
 sub get_link_home_page {
-	my ( $mech ) = @_;
-
 	print "Fetching home page\n";
 	$mech->get( $url );
 	my $res = $mech->content;
@@ -44,8 +40,6 @@ sub get_link_home_page {
 }
 
 sub get_link_gogole {
-	my ( $mech ) = @_;
-	
 	print "Preparing to use gogole search engine\n";
 	$mech->field( 'q', $cfg{ gogole_keywords } );
 	print "coucou\n";

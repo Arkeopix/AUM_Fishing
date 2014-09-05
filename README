@@ -6,8 +6,6 @@ As every social engineering stuff, you will need to be smart !
 
 
 TODO: 
-- Develop facebook login
-- Command line option to specify connection type (facebook login);
 - Command line option for verbose mode
 - Command line option to use Gogole:
     http://www.adopteunmec.com/gogole?q=keyword separated by whitespaces.

@@ -2,13 +2,14 @@
 
 use strict;
 use warnings;
-use WWW::Mechanize;
+use WWW::Mechanize::Firefox;
 use AUM::Config;
 
 $ENV{ PERL_LWP_SSL_VERIFY_HOSTNAME } = 0;
 
 my %cfg = AUM::Config->get_cfg;
-my $mech = WWW::Mechanize->new( agent => 'Windows Mozilla' );
+print "coucou\n";
+my $mech = WWW::Mechanize::Firefox->new;
 my $url = 'https://www.adopteunmec.com';
 my $bait = 0;
 my $res;
@@ -16,8 +17,8 @@ my $res;
 sub connect_and_fetch {
 	print "Connecting to your profile...\n";
 	$mech->get( $url );
-	$mech->field( 'username', $cfg{ auth }{ user_name } );
-	$mech->field( 'password', $cfg{ auth }{ passwd } );
+	$mech->field( '#mail', $cfg{ auth }{ user_name } );
+	$mech->field( '#password', $cfg{ auth }{ passwd } );
 	$mech->click_button( value => 'OK' );
 	$url = $mech->uri;
 	$mech->get( $url );
@@ -44,7 +45,6 @@ sub get_link_gogole {
 	my $curr_url = $mech->uri;
 
 	print "$curr_url\n";
-	print "$res\n";
 
 	print "Preparing to use gogole search engine\n";
 	$mech->field( 'q', $cfg{ gogole_keywords } );
@@ -59,7 +59,7 @@ sub get_link_gogole {
 }
 
 if ( connect_and_fetch ) {
-	my @links = ( get_link_home_page, get_link_gogole );
+	my @links = ( get_link_home_page );#, get_link_gogole );
 	foreach my $link ( @links ) {
 		print "found: $link\n";
 
@@ -69,6 +69,7 @@ if ( connect_and_fetch ) {
 	}
 
 	print "successfully baited $bait girls, now you wait for some magick mail !\n";
+	undef $mech;
 	exit 0;
 } else {
 	exit -1;

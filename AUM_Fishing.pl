@@ -67,7 +67,7 @@ if ( connect_and_fetch ) {
 		}
 	}
 
-	print "successfully baited $bait girls, now you wait for some magick mail !\nGoing to dsconnect you now...";
+	print "successfully baited $bait girls, now you wait for some magick mail !\nGoing to dsconnect you now...\n";
 	$mech->get( 'http://www.adopteunmec.com/auth/logout' );
 	print "Done ! Good-bye\n";
 	undef $mech;

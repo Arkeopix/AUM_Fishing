@@ -8,7 +8,6 @@ use AUM::Config;
 $ENV{ PERL_LWP_SSL_VERIFY_HOSTNAME } = 0;
 
 my %cfg = AUM::Config->get_cfg;
-print "coucou\n";
 my $mech = WWW::Mechanize::Firefox->new;
 my $url = 'https://www.adopteunmec.com';
 my $bait = 0;
@@ -49,7 +48,7 @@ sub get_link_gogole {
 	print "Preparing to use gogole search engine\n";
 	$mech->field( 'q', $cfg{ gogole_keywords } );
 	print "coucou\n";
-	$mech->click_button( value => 'Valider' );
+	$mech->click_button( id => 'btn-submit' );
 
 	$url = $mech->uri;
 	$mech->get( $url );
@@ -59,7 +58,7 @@ sub get_link_gogole {
 }
 
 if ( connect_and_fetch ) {
-	my @links = ( get_link_home_page );#, get_link_gogole );
+	my @links = ( get_link_home_page, get_link_gogole );
 	foreach my $link ( @links ) {
 		print "found: $link\n";
 

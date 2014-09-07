@@ -1,8 +1,13 @@
 if you're a "chien de la casse" or a "gros daleux" and you know how to use a CLI, then this is for you.
 
-Disclaimer:
+Disclaimer 1:
   This is no magick software that will get you all the pussy, but rather a tool allowing you to increase your chances.
-As every social engineering stuff, you will need to be smart !
+  As every social engineering stuff, you will need to be smart !
+
+Disclaimer 2:
+  This script is still work in progress: It may not work as expected. Use at you own risk.
+  
+
 
 
 TODO: 
@@ -12,4 +17,4 @@ TODO:
 - Spawn firefox process
 - Handle signals
     
-Thanks to "datass", real or fake his website gave me the idea.
+Thanks to "datass", real or fake, his website gave me the idea.

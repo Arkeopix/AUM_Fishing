@@ -9,7 +9,7 @@ $ENV{ PERL_LWP_SSL_VERIFY_HOSTNAME } = 0;
 $SIG{ INT } = \&clean_disconnect;
 
 my %cfg = AUM::Config->get_cfg;
-my $mech = WWW::Mechanize::Firefox->new;
+my $mech = WWW::Mechanize::Firefox->new( launch => 'firefox' );
 my $url = 'https://www.adopteunmec.com';
 my $bait = 0;
 my $res;
@@ -64,10 +64,6 @@ sub get_link_gogole {
 	my $res = $mech->content;
 	my @link_match_gogole = $res =~ /https?:\/\/www\.adopteunmec\.com\/profile\/[0-9]+/g;
 	return @link_match_gogole;
-}
-
-sub start_firefox {
-	
 }
 
 if ( connect_and_fetch ) {

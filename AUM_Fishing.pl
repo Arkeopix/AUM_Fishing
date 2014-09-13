@@ -6,12 +6,21 @@ use WWW::Mechanize::Firefox;
 use AUM::Config;
 
 $ENV{ PERL_LWP_SSL_VERIFY_HOSTNAME } = 0;
+$SIG{ INT } = \&clean_disconnect;
 
 my %cfg = AUM::Config->get_cfg;
 my $mech = WWW::Mechanize::Firefox->new;
 my $url = 'https://www.adopteunmec.com';
 my $bait = 0;
 my $res;
+
+sub clean_disconnect {
+	print "Going to dsconnect you now...\n";
+	$mech->get( 'http://www.adopteunmec.com/auth/logout' );
+	print "Done ! Good-bye\n";
+	undef $mech;
+	exit 0;
+}
 
 sub connect_and_fetch {
 	print "Connecting to your profile...\n";
@@ -57,6 +66,10 @@ sub get_link_gogole {
 	return @link_match_gogole;
 }
 
+sub start_firefox {
+	
+}
+
 if ( connect_and_fetch ) {
 	my @links = ( get_link_home_page, get_link_gogole );
 	foreach my $link ( @links ) {
@@ -67,11 +80,8 @@ if ( connect_and_fetch ) {
 		}
 	}
 
-	print "successfully baited $bait girls, now you wait for some magick mail !\nGoing to dsconnect you now...\n";
-	$mech->get( 'http://www.adopteunmec.com/auth/logout' );
-	print "Done ! Good-bye\n";
-	undef $mech;
-	exit 0;
+	print "successfully baited $bait girls, now you wait for some magick mail !\n";
+	clean_disconnect;
 } else {
 	exit -1;
 }

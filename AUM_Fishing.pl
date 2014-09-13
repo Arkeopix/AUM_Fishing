@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use IO::File;
 use WWW::Mechanize::Firefox;
 use AUM::Config;
 
@@ -66,8 +67,15 @@ sub get_link_gogole {
 	return @link_match_gogole;
 }
 
+sub dump_links_file {
+	my ( @links ) = @_;
+	
+	my $fh = IO::File->new( '+>' . $cfg{ save_file } );
+}
+
 if ( connect_and_fetch ) {
 	my @links = ( get_link_home_page, get_link_gogole );
+	dump_links_file( @links );
 	foreach my $link ( @links ) {
 		print "found: $link\n";
 

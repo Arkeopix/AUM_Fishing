@@ -33,8 +33,8 @@ sub connect_and_fetch {
 	$mech->get( $url );
 
 	if ( $url eq 'https://www.adopteunmec.com/index?e=login' ) {
-		print STDERR "connection failed, wrong username or password";
-		return undef;
+	  print STDERR "connection failed, wrong username or password";
+	  return undef;
 	}
 	print "Connected\n";
 
@@ -67,21 +67,26 @@ sub get_link_gogole {
 	return @link_match_gogole;
 }
 
-sub dump_links_file {
-	my ( @links ) = @_;
-	
-	my $fh = IO::File->new( '+>' . $cfg{ save_file } );
+sub update_links_file {
+  my ( @links ) = @_;
+
+  print "file eq $cfg{ save_file }\n";
+
+  my $fh = IO::File->new( '+>' . $cfg{ save_file } )
+    || die  "could not open file: $!";
+
+  foreach my $link ( @links ) {
+    print "found: $link\n";
+  }
 }
 
 if ( connect_and_fetch ) {
 	my @links = ( get_link_home_page, get_link_gogole );
-	dump_links_file( @links );
+	update_links_file( @links );
 	foreach my $link ( @links ) {
-		print "found: $link\n";
-
-		if ( $mech->get( $link ) ) {
-			$bait++;
-		}
+		# if ( $mech->get( $link ) ) {
+		# 	$bait++;
+		# }
 	}
 
 	print "successfully baited $bait girls, now you wait for some magick mail !\n";

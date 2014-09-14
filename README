@@ -14,5 +14,5 @@ TODO:
   in a short period of time. this way you look like a nice, shy dreamer instead of a creepy stalker.
 - Spawn firefox process
 - mix gogole keywords to maximize chances
-    
+- generate timestamp with perl time(); 5hours = 18000 seconds in dif
 Thanks to "datass", real or fake, his website gave me the idea.

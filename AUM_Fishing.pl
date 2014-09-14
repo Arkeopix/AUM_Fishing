@@ -77,6 +77,7 @@ sub update_links_file {
 
   foreach my $link ( @links ) {
     print "found: $link\n";
+	
   }
 }
 

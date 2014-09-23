@@ -57,7 +57,6 @@ sub get_link_gogole {
 
 	print "Preparing to use gogole search engine\n";
 	$mech->field( 'q', $cfg{ gogole_keywords } );
-	print "coucou\n";
 	$mech->click_button( id => 'btn-submit' );
 
 	$url = $mech->uri;
@@ -70,26 +69,29 @@ sub get_link_gogole {
 sub update_links_file {
   my ( @links ) = @_;
 
-  print "file eq $cfg{ save_file }\n";
-
   my $fh = IO::File->new( '+>' . $cfg{ save_file } )
     || die  "could not open file: $!";
 
   foreach my $link ( @links ) {
-    print "found: $link\n";
-	
+    print "looking for: " . time . " $link\n";
+		if ( $^O eq 'MSWin32' ) {
+			$fh->print( $link ) if my @results = qx'findstr $link $cfg{ save_file }'
+		} else {
+			$fh->print( $link ) if my @results = qx'grep $link $cfg{ save_file }'
+		}
+	}
   }
 }
 
 if ( connect_and_fetch ) {
 	my @links = ( get_link_home_page, get_link_gogole );
-	update_links_file( @links );
+
 	foreach my $link ( @links ) {
 		# if ( $mech->get( $link ) ) {
 		# 	$bait++;
 		# }
 	}
-
+	update_links_file( @links );
 	print "successfully baited $bait girls, now you wait for some magick mail !\n";
 	clean_disconnect;
 } else {

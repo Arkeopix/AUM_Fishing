@@ -74,10 +74,13 @@ sub update_links_file {
 
   foreach my $link ( @links ) {
     print "looking for: " . time . " $link\n";
+	my @results;
 	if ( $^O eq 'MSWin32' ) {
-		$fh->print( $link ) if my @results = qx( findstr $link $cfg{ save_file } );
+		@results = qx( findstr $link $cfg{ save_file } );
+		$fh->print( time . ' ' . $link . "\n" ) if !@results;
 	} else {
-		$fh->print( $link ) if my @results = qx( grep $link $cfg{ save_file } );
+		@results = qx( grep $link $cfg{ save_file } );
+		$fh->print( time . ' ' . $link . '\n' ) if !@results
 	}
   }
 }

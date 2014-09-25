@@ -66,6 +66,18 @@ sub get_link_gogole {
 	return @link_match_gogole;
 }
 
+sub timestamp_nok {
+	my ( @result, $link, $curr_time ) = @_;
+	
+	print "result = @result\n";
+	$result[0] =~ /(?<timestamp>[0-9]+)/;
+	my $timestamp = $+{ timestamp };
+	print "$timestamp\n"
+	if ( $curr_time - $timestamp > 18000 ) {
+		
+	}
+}
+
 sub update_links_file {
   my ( @links ) = @_;
 
@@ -73,27 +85,28 @@ sub update_links_file {
     || die  "could not open file: $!";
 
   foreach my $link ( @links ) {
-    print "looking for: " . time . " $link\n";
+    print "looking for: " . time . "$link\n";
 	my @results;
 	if ( $^O eq 'MSWin32' ) {
 		@results = qx( findstr $link $cfg{ save_file } );
-		$fh->print( time . ' ' . $link . "\n" ) if !@results;
+		if ( !@results || timestamp_nok( @results, $link, time ) ) {
+			$fh->print( time . ' ' . $link . "\n" );
+		}
 	} else {
 		@results = qx( grep $link $cfg{ save_file } );
-		$fh->print( time . ' ' . $link . '\n' ) if !@results
+		$fh->print( time . ' ' . $link . '\n' ) if !@results;
 	}
   }
 }
 
 if ( connect_and_fetch ) {
 	my @links = ( get_link_home_page, get_link_gogole );
-
+	update_links_file( @links );
 	foreach my $link ( @links ) {
 		# if ( $mech->get( $link ) ) {
 		# 	$bait++;
 		# }
 	}
-	update_links_file( @links );
 	print "successfully baited $bait girls, now you wait for some magick mail !\n";
 	clean_disconnect;
 } else {

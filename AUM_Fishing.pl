@@ -67,15 +67,22 @@ sub get_link_gogole {
 }
 
 sub timestamp_nok {
-	my ( @result, $link, $curr_time ) = @_;
+	my ( @result, $link ) = @_;
 	
 	print "result = @result\n";
 	$result[0] =~ /(?<timestamp>[0-9]+)/;
 	my $timestamp = $+{ timestamp };
-	print "$timestamp\n"
-	if ( $curr_time - $timestamp > 18000 ) {
-		
+	print "$timestamp\n";
+	if ( time - $timestamp > 86400 ) {
+		print "timestamp nok\n";
+		if ( $^O eq 'MSWin32' ) {
+			qx( gc $cfg{ save_file } | %{ $_ -replace '$result[0]', ''} );
+		} else {
+			qx( sed -i '/$result[0]/Id' $cfg{ save_file });
+		}
+		return 0;
 	}
+	return 1;
 }
 
 sub update_links_file {
@@ -89,7 +96,8 @@ sub update_links_file {
 	my @results;
 	if ( $^O eq 'MSWin32' ) {
 		@results = qx( findstr $link $cfg{ save_file } );
-		if ( !@results || timestamp_nok( @results, $link, time ) ) {
+		if ( !@results || timestamp_nok( @results, $link ) ) { # condition a revoir
+			print "writing\n";
 			$fh->print( time . ' ' . $link . "\n" );
 		}
 	} else {

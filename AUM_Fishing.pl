@@ -67,37 +67,39 @@ sub get_link_gogole {
 }
 
 sub timestamp_nok {
-	my ( @result, $link ) = @_;
-	
-	print "result = @result\n";
+	my ( @result ) = @_;
+	print "##### TIMESTAMP_NOK #######\n";
+	print "\tresult = [@result]\n";
 	$result[0] =~ /(?<timestamp>[0-9]+)/;
 	my $timestamp = $+{ timestamp };
-	print "$timestamp\n";
-	if ( time - $timestamp > 86400 ) {
-		print "timestamp nok\n";
+	my $diff = time - $timestamp;
+	print "\ttime = " . time . " - timestamp = $timestamp = $diff\n";
+	if ( time - $timestamp > 50 ) { #24heures = 86400 sec
+		print "\ttimestamp nok\n";
 		if ( $^O eq 'MSWin32' ) {
 			qx( gc $cfg{ save_file } | %{ $_ -replace '$result[0]', ''} );
 		} else {
 			qx( sed -i '/$result[0]/Id' $cfg{ save_file });
 		}
-		return 0;
+		print "##### TIMESTAMP_NOK 1 #######\n";
+		return 1;
 	}
-	return 1;
+	print "##### TIMESTAMP_NOK 0 #######\n\n";
+	return 0;
 }
 
 sub update_links_file {
   my ( @links ) = @_;
 
-  my $fh = IO::File->new( '+>' . $cfg{ save_file } )
+  my $fh = IO::File->new( '+>>' . $cfg{ save_file } )
     || die  "could not open file: $!";
 
   foreach my $link ( @links ) {
-    print "looking for: " . time . "$link\n";
 	my @results;
 	if ( $^O eq 'MSWin32' ) {
 		@results = qx( findstr $link $cfg{ save_file } );
-		if ( !@results || timestamp_nok( @results, $link ) ) { # condition a revoir
-			print "writing\n";
+		if ( !@results || timestamp_nok( @results ) ) { # condition a revoir
+			print "writing " . time . ' ' . "$link\n";
 			$fh->print( time . ' ' . $link . "\n" );
 		}
 	} else {
@@ -110,12 +112,12 @@ sub update_links_file {
 if ( connect_and_fetch ) {
 	my @links = ( get_link_home_page, get_link_gogole );
 	update_links_file( @links );
-	foreach my $link ( @links ) {
+	#foreach my $link ( @links ) {
 		# if ( $mech->get( $link ) ) {
-		# 	$bait++;
+		 	# $bait++;
 		# }
-	}
-	print "successfully baited $bait girls, now you wait for some magick mail !\n";
+	#}
+	#print "successfully baited $bait girls, now you wait for some magick mail !\n";
 	clean_disconnect;
 } else {
 	exit -1;

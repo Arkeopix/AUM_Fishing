@@ -69,6 +69,7 @@ sub get_link_gogole {
 sub timestamp_nok {
 	my ( @result ) = @_;
 	print "##### TIMESTAMP_NOK #######\n";
+	chomp $result[0];
 	print "\tresult = [@result]\n";
 	$result[0] =~ /(?<timestamp>[0-9]+)/;
 	my $timestamp = $+{ timestamp };
@@ -77,7 +78,7 @@ sub timestamp_nok {
 	if ( time - $timestamp > 50 ) { #24heures = 86400 sec
 		print "\ttimestamp nok\n";
 		if ( $^O eq 'MSWin32' ) {
-			qx( gc $cfg{ save_file } | %{ $_ -replace '$result[0]', ''} );
+			qx( perl -i.bak -pe "s/\Q$result[0]\E//g" $cfg{ save_file } );
 		} else {
 			qx( sed -i '/$result[0]/Id' $cfg{ save_file });
 		}

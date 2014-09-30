@@ -78,7 +78,7 @@ sub timestamp_nok {
 	if ( time - $timestamp > 50 ) { #24heures = 86400 sec
 		print "\ttimestamp nok\n";
 		if ( $^O eq 'MSWin32' ) {
-			qx( perl -i.bak -pe "s/\Q$result[0]\E//g" $cfg{ save_file } );
+			qx( perl -i.bak -pe "s/^\Q$result[0]\E\$//g" $cfg{ save_file } );
 		} else {
 			qx( sed -i '/$result[0]/Id' $cfg{ save_file });
 		}
@@ -92,19 +92,20 @@ sub timestamp_nok {
 sub update_links_file {
   my ( @links ) = @_;
 
-  my $fh = IO::File->new( '+>>' . $cfg{ save_file } )
-    || die  "could not open file: $!";
-
   foreach my $link ( @links ) {
 	my @results;
 	if ( $^O eq 'MSWin32' ) {
 		@results = qx( findstr $link $cfg{ save_file } );
-		if ( !@results || timestamp_nok( @results ) ) { # condition a revoir
+		if ( !@results || timestamp_nok( @results ) ) {
+			my $fh = IO::File->new( '+>>' . $cfg{ save_file } )
+				|| die  "could not open file: $!";
 			print "writing " . time . ' ' . "$link\n";
 			$fh->print( time . ' ' . $link . "\n" );
 		}
 	} else {
 		@results = qx( grep $link $cfg{ save_file } );
+		my $fh = IO::File->new( '+>>' . $cfg{ save_file } )
+				|| die  "could not open file: $!";
 		$fh->print( time . ' ' . $link . '\n' ) if !@results;
 	}
   }

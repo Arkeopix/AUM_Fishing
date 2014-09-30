@@ -79,7 +79,7 @@ sub timestamp_nok {
 		print "\ttimestamp nok\n";
 		if ( $^O eq 'MSWin32' ) {
 			qx( perl -i.bak -pe "s/^\Q$result[0]\E\$//g" $cfg{ save_file } );
-			qx( perl -i.bak -pe "s{^\s*\n\$}{}" $cfg{ save_file } );
+			qx( perl -i.bak -pe "s{^\\s*\n\$}{}" $cfg{ save_file } );
 		} else {
 			qx( sed -i '/$result[0]/Id' $cfg{ save_file });
 		}
@@ -90,37 +90,44 @@ sub timestamp_nok {
 	return 0;
 }
 
-sub update_links_file {
-  my ( @links ) = @_;
+sub update_file {
+	my ( $results, $link ) = @_;
 
-  foreach my $link ( @links ) {
-	my @results;
-	if ( $^O eq 'MSWin32' ) {
-		@results = qx( findstr $link $cfg{ save_file } );
-		if ( !@results || timestamp_nok( @results ) ) {
-			my $fh = IO::File->new( '+>>' . $cfg{ save_file } )
-				|| die  "could not open file: $!";
+	print "link = $link\n";
+	if ( !@$results || timestamp_nok( @$results ) ) {
+		my $fh = IO::File->new( '+>>' . $cfg{ save_file } )
+			|| die  "could not open file: $!";
 			print "writing " . time . ' ' . "$link\n";
 			$fh->print( time . ' ' . $link . "\n" );
-		}
-	} else {
-		@results = qx( grep $link $cfg{ save_file } );
-		my $fh = IO::File->new( '+>>' . $cfg{ save_file } )
-				|| die  "could not open file: $!";
-		$fh->print( time . ' ' . $link . '\n' ) if !@results;
+		$fh->close;
 	}
-  }
+}
+
+sub search_file {
+  my ( $links, $sub ) = @_;
+
+	my @results;
+	foreach my $link ( @$links ) {
+		if ( $^O eq 'MSWin32' ) {
+			@results = qx( findstr $link $cfg{ save_file } );
+			$sub->( \@results, $link );
+		} else {
+			@results = qx( grep $link $cfg{ save_file } );
+			$sub->( \@results, $link );
+		}
+	}
+	return @results;
 }
 
 if ( connect_and_fetch ) {
 	my @links = ( get_link_home_page, get_link_gogole );
-	update_links_file( @links );
-	#foreach my $link ( @links ) {
+	# foreach my $link ( @links ) {
 		# if ( $mech->get( $link ) ) {
-		 	# $bait++;
+			# $bait++;
 		# }
-	#}
-	#print "successfully baited $bait girls, now you wait for some magick mail !\n";
+	# }
+	search_file( \@links, \&update_file );
+	print "successfully baited $bait girls, now you wait for some magick mail !\n";
 	clean_disconnect;
 } else {
 	exit -1;

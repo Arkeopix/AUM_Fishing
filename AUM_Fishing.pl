@@ -75,10 +75,11 @@ sub timestamp_nok {
 	my $timestamp = $+{ timestamp };
 	my $diff = time - $timestamp;
 	print "\ttime = " . time . " - timestamp = $timestamp = $diff\n";
-	if ( time - $timestamp > 50 ) { #24heures = 86400 sec
+	if ( time - $timestamp > 86400 ) { #24heures = 86400 sec
 		print "\ttimestamp nok\n";
 		if ( $^O eq 'MSWin32' ) {
 			qx( perl -i.bak -pe "s/^\Q$result[0]\E\$//g" $cfg{ save_file } );
+			qx( perl -i.bak -pe "s{^\s*\n\$}{}" $cfg{ save_file } );
 		} else {
 			qx( sed -i '/$result[0]/Id' $cfg{ save_file });
 		}

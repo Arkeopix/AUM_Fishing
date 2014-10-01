@@ -77,12 +77,8 @@ sub timestamp_nok {
 	print "\ttime = " . time . " - timestamp = $timestamp = $diff\n";
 	if ( time - $timestamp > 86400 ) { #24heures = 86400 sec
 		print "\ttimestamp nok\n";
-		if ( $^O eq 'MSWin32' ) {
-			qx( perl -i.bak -pe "s/^\Q$result[0]\E\$//g" $cfg{ save_file } );
-			qx( perl -i.bak -pe "s{^\\s*\n\$}{}" $cfg{ save_file } );
-		} else {
-			qx( sed -i '/$result[0]/Id' $cfg{ save_file });
-		}
+		qx( perl -i.bak -pe "s/^\Q$result[0]\E\$//g" $cfg{ save_file } );
+		qx( perl -i.bak -pe "s{^\\s*\n\$}{}" $cfg{ save_file } );
 		print "##### TIMESTAMP_NOK 1 #######\n";
 		return 1;
 	}
@@ -100,33 +96,43 @@ sub update_file {
 			print "writing " . time . ' ' . "$link\n";
 			$fh->print( time . ' ' . $link . "\n" );
 		$fh->close;
+		return 1;
 	}
+	return undef;
+}
+
+sub ping_profile {
+	my ( $results, $link ) = @_;
+	
+	if ( !@$results && $mech->get( $link ) ) {
+		print "pinging $link\n";
+		$bait++;
+		return 1;
+	}
+	print "not pinging\n";
+	return undef;
 }
 
 sub search_file {
-  my ( $links, $sub ) = @_;
+  my ( $link, $sub ) = @_;
 
 	my @results;
-	foreach my $link ( @$links ) {
-		if ( $^O eq 'MSWin32' ) {
-			@results = qx( findstr $link $cfg{ save_file } );
-			$sub->( \@results, $link );
-		} else {
-			@results = qx( grep $link $cfg{ save_file } );
-			$sub->( \@results, $link );
-		}
+	if ( $^O eq 'MSWin32' ) {
+		@results = qx( findstr $link $cfg{ save_file } );
+		return $sub->( \@results, $link );
+	} else {
+		@results = qx( grep $link $cfg{ save_file } );
+		return $sub->( \@results, $link );
 	}
-	return @results;
 }
 
 if ( connect_and_fetch ) {
 	my @links = ( get_link_home_page, get_link_gogole );
-	# foreach my $link ( @links ) {
-		# if ( $mech->get( $link ) ) {
-			# $bait++;
-		# }
-	# }
-	search_file( \@links, \&update_file );
+	foreach my $link ( @links ) {
+		if ( search_file( $link, \&ping_profile ) ) {
+			search_file( $link, \&update_file );
+		}
+	}
 	print "successfully baited $bait girls, now you wait for some magick mail !\n";
 	clean_disconnect;
 } else {

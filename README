@@ -11,11 +11,11 @@ Disclaimer 2:
 TODO: 
 - Command line option for verbose mode
 - Spawn firefox process
-- mix gogole keywords to maximize chances
 
 Done:
 - generate timestamp with perl time(); 5hours = 18000 seconds in dif
 - Keep track of who has been visited the last 5 hours in order to avoid visiting the same profile multiple time
   in a short period of time. this way you look like a nice, shy dreamer instead of a creepy stalker.
-  
+- mix gogole keywords to maximize chances 
+ 
 Thanks to "datass", real or fake, his website gave me the idea.

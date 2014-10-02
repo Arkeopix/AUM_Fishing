@@ -50,13 +50,23 @@ sub get_link_home_page {
 	return @link_match_home;
 }
 
+sub gogole_randomize {
+	my ( $keywords, $nbr ) = @_;
+	
+	my $ret = '';
+	for my $i ( 0 .. $nbr ) {
+		my $word = @$keywords[ rand( @$keywords ) ];
+		$ret = $ret . ' ' . $word if $ret !~ /$word/;
+	}
+	return $ret;
+}
+
 sub get_link_gogole {
 	my $curr_url = $mech->uri;
 
-	print "$curr_url\n";
-
 	print "Preparing to use gogole search engine\n";
-	$mech->field( 'q', $cfg{ gogole_keywords } );
+	my $gogole_string = gogole_randomize( $cfg{ gogole }{ gogole_keywords }, $cfg{ gogole }{ nbr_keywords } );
+	$mech->field( 'q', $gogole_string);
 	$mech->click_button( id => 'btn-submit' );
 
 	$url = $mech->uri;

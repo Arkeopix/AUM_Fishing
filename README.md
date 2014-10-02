@@ -15,7 +15,7 @@ A quoi ça sert ?
 Sur adopteunmec.com, les femmes ont tendance à être passive. C'est-à-dire qu'elles attendent les visites et décident ensuite de rendre la courtoisie ou non. 
 
 AUM_Fishing sert donc à provoquer chez les utilisatrices une envie de visiter votre profil.
-Après ça c'est vous de jouer.
+Après ça, c'est à vous de jouer.
 
 
 To-do:

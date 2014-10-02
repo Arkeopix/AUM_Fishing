@@ -11,12 +11,12 @@ my %cfg = (
 		passwd => '123456789' 
 		},
 	gogole	=> { 
-			gogole_keywords => [ 'blonde', 
-								 'strasbourg', 
-								 'metal', 
-								 'rousse', 
-								 'tintin', 
-								 'coquine', 
+			gogole_keywords => [ 'blonde',
+								 'strasbourg',
+								 'metal',
+								 'rousse',
+								 'tintin',
+								 'coquine',
 								 'paris' 
 					],
 			nbr_keywords => 3,

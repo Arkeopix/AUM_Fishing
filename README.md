@@ -21,7 +21,6 @@ Après ça, c'est à vous de jouer.
 
 To-do:
 ------
-- Command line option for verbose mode
 
 Done:
 -----

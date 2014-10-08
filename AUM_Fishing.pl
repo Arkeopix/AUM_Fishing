@@ -16,7 +16,7 @@ my $bait = 0;
 my $res;
 
 sub clean_disconnect {
-	print "Going to dsconnect you now...\n";
+	print "Going to disconnect you now...\n";
 	$mech->get( 'http://www.adopteunmec.com/auth/logout' );
 	print "Done ! Good-bye\n";
 	undef $mech;
@@ -33,7 +33,7 @@ sub connect_and_fetch {
 	$mech->get( $url );
 
 	if ( $url eq 'https://www.adopteunmec.com/index?e=login' ) {
-	  print STDERR "connection failed, wrong username or password";
+	  print STDERR "connection failed, wrong username or password or already logged in";
 	  return undef;
 	}
 	print "Connected\n";
@@ -78,32 +78,24 @@ sub get_link_gogole {
 
 sub timestamp_nok {
 	my ( @result ) = @_;
-	print "##### TIMESTAMP_NOK #######\n";
 	chomp $result[0];
-	print "\tresult = [@result]\n";
 	$result[0] =~ /(?<timestamp>[0-9]+)/;
 	my $timestamp = $+{ timestamp };
 	my $diff = time - $timestamp;
-	print "\ttime = " . time . " - timestamp = $timestamp = $diff\n";
 	if ( time - $timestamp > 86400 ) { #24heures = 86400 sec
-		print "\ttimestamp nok\n";
 		qx( perl -i.bak -pe "s/^\Q$result[0]\E\$//g" $cfg{ save_file } );
 		qx( perl -i.bak -pe "s{^\\s*\n\$}{}" $cfg{ save_file } );
-		print "##### TIMESTAMP_NOK 1 #######\n";
 		return 1;
 	}
-	print "##### TIMESTAMP_NOK 0 #######\n\n";
 	return 0;
 }
 
 sub update_file {
 	my ( $results, $link ) = @_;
 
-	print "link = $link\n";
 	if ( !@$results || timestamp_nok( @$results ) ) {
 		my $fh = IO::File->new( '+>>' . $cfg{ save_file } )
 			|| die  "could not open file: $!";
-			print "writing " . time . ' ' . "$link\n";
 			$fh->print( time . ' ' . $link . "\n" );
 		$fh->close;
 		return 1;

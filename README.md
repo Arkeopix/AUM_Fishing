@@ -21,7 +21,6 @@ Après ça, c'est à vous de jouer.
 To-do:
 ------
 - Command line option for verbose mode
-- Spawn firefox process
 
 Done:
 -----
@@ -29,6 +28,7 @@ Done:
 - Keep track of who has been visited the last 5 hours in order to avoid visiting the same profile multiple time
 in a short period of time. this way you look like a nice, shy dreamer instead of a creepy stalker.
 - mix gogole keywords to maximize chances
+- Spawn firefox process
 
 legacy readme (parceque je l'aime)
 ------------------------------------

@@ -69,8 +69,8 @@ sub get_link_gogole {
 	$mech->field( 'q', $gogole_string);
 	$mech->click_button( id => 'btn-submit' );
 
-	$url = $mech->uri;
-	$mech->get( $url );
+#	$url = $mech->uri;
+#	$mech->get( $url );
 	my $res = $mech->content;
 	my @link_match_gogole = $res =~ /https?:\/\/www\.adopteunmec\.com\/profile\/[0-9]+/g;
 	return @link_match_gogole;

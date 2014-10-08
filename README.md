@@ -21,6 +21,7 @@ Après ça, c'est à vous de jouer.
 
 To-do:
 ------
+- fix callback issue
 
 Done:
 -----

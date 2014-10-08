@@ -3,6 +3,7 @@ AUM_FISHING
 
 [![forthebadge](http://forthebadge.com/badges/compatibility-emacs.svg)](http://forthebadge.com)
 [![forthebadge](http://forthebadge.com/badges/powered-by-electricity.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/badges/built-with-swag.svg)](http://forthebadge.com)
 
 Qu'est-ce que c'est ?
 ----------------------
